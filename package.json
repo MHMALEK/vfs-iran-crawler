@@ -1,0 +1,19 @@
+{
+  "name": "vfs-checker",
+  "version": "1.0.0",
+  "description": "check vfs appointments",
+  "main": "node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MHMALEK",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "node-telegram-bot-api": "^0.56.0",
+    "puppeteer": "^13.5.2",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-adblocker": "^2.12.0",
+    "puppeteer-extra-plugin-stealth": "^2.9.0"
+  }
+}
