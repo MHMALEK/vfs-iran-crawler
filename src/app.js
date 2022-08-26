@@ -29,7 +29,6 @@ const startApp = () => {
   app.get("/", checkAppointmentsController);
   app.get("/start-bot", telegramBotController);
 
-  /* Error handler middleware */
   app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
 };
 
