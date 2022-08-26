@@ -5,7 +5,9 @@
   "main": "node.js",
   "scripts": {
     "start": "npm-run-all --parallel watch:build",
-    "watch:build": "webpack --watch"
+    "watch:build": "webpack --watch",
+    "build": "node build/index.js"
+
   },
   "author": "MHMALEK",
   "license": "ISC",
