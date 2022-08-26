@@ -1,6 +1,7 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const NodemonPlugin = require('nodemon-webpack-plugin')
+const NodemonPlugin = require("nodemon-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 const { NODE_ENV = "production" } = process.env;
 module.exports = {
@@ -15,7 +16,6 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   externals: [nodeExternals()],
-  plugins: [
-    new NodemonPlugin()
-  ],
+  // fix issue with dotenv import file on es6 imports
+  plugins: [new NodemonPlugin(), new Dotenv()],
 };

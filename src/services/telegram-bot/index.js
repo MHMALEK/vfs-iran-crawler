@@ -1,32 +1,43 @@
-const TelegramBot = require("node-telegram-bot-api");
+import userModel, { getAllUsers, isUserExist } from "../../models/User";
 
-const createTelegramBot = (token = process.env.TELEGRAM_BOT_TOKEN) => {
-  console.log(token);
-  return new TelegramBot(token, { polling: true });
+const TelegramBotAPI = require("node-telegram-bot-api");
+
+const createTelegramBot = (token) => {
+  return new TelegramBotAPI(token, { polling: true });
 };
-// const bot =
-// // Matches "/echo [whatever]"
-// bot.onText(/\/echo (.+)/, (msg, match) => {
-//   // 'msg' is the received Message from Telegram
-//   // 'match' is the result of executing the regexp above on the text content
-//   // of the message
 
-//   const chatId = msg.chat.id;
-//   const resp = match[1]; // the captured "whatever"
+const TelegramBot = createTelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
-//   console.log(chatId);
+const initTelegramBotListeners = () => {
+  TelegramBot.on("message", onMessageRecived);
+};
 
-//   // send back the matched "whatever" to the chat
-//   bot.sendMessage(chatId, resp);
-// });
+const onMessageRecived = (msg) => {
+  const chatId = msg.chat.id;
+  saveChatIDToDB(chatId);
+};
+const saveChatIDToDB = async (chatId) => {
+  try {
+    const isDuplicate = await isUserExist(chatId);
+    if (!isDuplicate) {
+      const user = new userModel({
+        chatId,
+      });
+      user.save();
+    }
+  } catch (error) {
+    throw new Error("can not save user to database");
+  }
+};
 
-// // Listen for any kind of message. There are different kinds of
-// // messages.
-// bot.on("message", (msg) => {
-//   const chatId = msg.chat.id;
+const sendMessageToAllUsers = async (message) => {
+  const users = await getAllUsers();
+  users.map(({ chatId }) => TelegramBot.sendMessage(chatId, message));
+};
 
-//   // send a message to the chat acknowledging receipt of their message
-//   bot.sendMessage(chatId, chatId);
-// });
+const sendMessageToUser = ({ chatId, message }) => {
+  TelegramBot.sendMessage(chatId, message);
+};
 
-export default createTelegramBot;
+export { initTelegramBotListeners, sendMessageToAllUsers, sendMessageToUser };
+export default TelegramBot;

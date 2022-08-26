@@ -1,4 +1,4 @@
-import { selectLocationIdDropdown } from "../dom/selectors";
+import { selectLocationIdDropdown } from "../selectors";
 
 export const selectVFSLocation = async (page) => {
   try {

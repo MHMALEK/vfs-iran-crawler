@@ -1,5 +1,3 @@
-import ERROR_TYPES from "../../errors/errorTypes";
-
 const axios = require("axios");
 
 const {
@@ -23,7 +21,7 @@ const sendDataToResolverServer = async (captcha) =>
       return response.data.taskId;
     })
     .catch((error) => {
-      throw new Error(ERROR_TYPES.SUBMIT_CPATCH_TO_RESOLVER_SERVER_ERROR);
+      throw new Error('ERROR_TYPES.SUBMIT_CPATCH_TO_RESOLVER_SERVER_ERROR');
     });
 
 const getResultFromResolverServer = async (taskId) => {

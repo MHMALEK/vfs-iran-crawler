@@ -1,3 +1,5 @@
+import puppeteerConfig from "./config";
+
 // with stealth to trick vfs to not recongnize the bot
 const puppeteer = require("puppeteer-extra");
 
@@ -5,14 +7,7 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 
-const create = async (
-  { headless, args } = {
-    headless: false,
-    args: [
-      "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
-    ],
-  }
-) => {
+const create = async ({ headless, args } = puppeteerConfig) => {
   const browser = await puppeteer.launch({
     headless,
     args,

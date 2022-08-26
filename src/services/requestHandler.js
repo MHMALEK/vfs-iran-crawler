@@ -12,7 +12,7 @@ export const appointmentRequestInterceptor = (
             return resolve(responseFromEndpoint);
           } else {
             console.log("responseFromEndpoint", responseFromEndpoint);
-            return resolve("seat is availble");
+            return resolve("Appointment is Availble! Get it soon!");
           }
         }
       });

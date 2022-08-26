@@ -1,14 +1,9 @@
-import {
-  selectLocationIdDropdown,
-  selectScheduleMenuItem,
-} from "../dom/selectors";
+import { selectScheduleMenuItem } from "../selectors";
 
 export const getAppointmentData = async (page) => {
   try {
-
     const scheduleMenuItem = await selectScheduleMenuItem(page);
-    console.log('dsad', scheduleMenuItem)
-   return await Promise.all([
+    return await Promise.all([
       scheduleMenuItem.click(),
       page.waitForNavigation({ waitUntil: "networkidle2" }),
     ]);

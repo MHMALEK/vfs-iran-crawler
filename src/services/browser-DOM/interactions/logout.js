@@ -1,4 +1,4 @@
-import { selectLogOutButton } from "../dom/selectors";
+import { selectLogOutButton } from "../selectors";
 
 const logout = async (page) => {
   try {
