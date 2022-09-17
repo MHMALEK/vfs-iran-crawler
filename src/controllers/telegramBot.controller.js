@@ -1,8 +1,11 @@
 import User from "../models/User";
-import TelegramBot from "../services/telegram-bot";
+import TelegramBot, {
+  initTelegramBotListeners,
+} from "../services/telegram-bot";
 
 const telegramBotController = (req, res) => {
-  console.log("telegramBotController");
+  // listen to messages request
+  initTelegramBotListeners();
 };
 
 export default telegramBotController;
