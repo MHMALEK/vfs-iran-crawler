@@ -42,4 +42,4 @@ const checkAppointmentEveryDayJob = createScheduledJobs({
 });
 
 startApp();
-checkAppointmentEveryDayJob.start();
+// checkAppointmentEveryDayJob.start();
