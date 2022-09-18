@@ -8,10 +8,11 @@ const randomUserAgent = new UserAgent({
   platform: "Linux x86_64",
 });
 
+console.log(process.env.NODE_ENV,'process.env.NODE_ENV')
 console.log(';randomUserAgent', randomUserAgent.data.userAgent)
 
 const puppeteerConfig = {
-  headless: false,
+  headless: process.env.NODE_ENV === 'production' ? true : false,
   args: [randomUserAgent.data.userAgent || userAgentDefault],
 };
 export default puppeteerConfig;

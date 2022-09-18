@@ -3,12 +3,22 @@ import userModel, { getAllUsers, isUserExist } from "../../models/User";
 const TelegramBotAPI = require("node-telegram-bot-api");
 
 const createTelegramBot = (token) => {
+  console.log(token);
   return new TelegramBotAPI(token, { polling: true });
 };
 
-const TelegramBot = createTelegramBot(process.env.TELEGRAM_BOT_TOKEN);
+const getToken = () =>
+  process.env.NODE_ENV === "production"
+    ? process.env.TELEGRAM_BOT_TOKEN_PROD
+    : process.env.TELEGRAM_BOT_TOKEN;
 
-const initTelegramBotListeners = () => {
+const TelegramBot = createTelegramBot(getToken());
+
+const initTelegramBotListeners = async () => {
+  if (TelegramBot.isPolling()) {
+    await TelegramBot.stopPolling();
+    await TelegramBot.startPolling()
+  }
   TelegramBot.on("message", onMessageRecived);
   TelegramBot.on("callback_query", onCallbackQuery);
   TelegramBot.onText(/\/start/, showStartMenu);
@@ -32,6 +42,7 @@ const showStartMenu = (msg) => {
 };
 
 const onMessageRecived = (msg) => {
+  console.log(msg);
   const chatId = msg.chat.id;
   saveChatIDToDB(chatId);
 
@@ -72,12 +83,15 @@ const saveChatIDToDB = async (chatId) => {
 
 const sendMessageToAllUsers = async (message) => {
   const users = await getAllUsers();
+  console.log('users', users, message)
   users.map(({ chatId }) => TelegramBot.sendMessage(chatId, message));
 };
 
 const sendMessageToUser = ({ chatId, message }) => {
   TelegramBot.sendMessage(chatId, message);
 };
+
+initTelegramBotListeners();
 
 export { initTelegramBotListeners, sendMessageToAllUsers, sendMessageToUser };
 export default TelegramBot;

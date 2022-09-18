@@ -13,7 +13,6 @@ import createScheduledJobs, {
 import initilizeRollbarLogger from "./services/rollbar";
 const PORT = process.env.PORT || 3000;
 
-const rollbar = initilizeRollbarLogger();
 
 const middleWares = [json, helmet, compression];
 const initMiddleWares = (app) =>
@@ -28,6 +27,7 @@ const startApp = () => {
   initDataBase();
 
   // rollbar logger for errors
+  initilizeRollbarLogger();
 
   // routes
   app.get("/", checkAppointmentsController);
@@ -40,6 +40,7 @@ const checkAppointmentEveryDayJob = createScheduledJobs({
   expression: cronJobDefaultConfig.expression,
   callBack: checkAppointmentServiceResult,
 });
+// checkAppointmentEveryDayJob.start();
+
 
 startApp();
-// checkAppointmentEveryDayJob.start();
