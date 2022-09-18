@@ -11,6 +11,7 @@ import createScheduledJobs, {
   cronJobDefaultConfig,
 } from "./services/scheduldedFunctions";
 import initilizeRollbarLogger from "./services/rollbar";
+import mainController from "./controllers/main.controller";
 const PORT = process.env.PORT || 3000;
 
 
@@ -30,7 +31,9 @@ const startApp = () => {
   initilizeRollbarLogger();
 
   // routes
-  app.get("/", checkAppointmentsController);
+  app.get("/", mainController);
+  app.get("/check-appointment", checkAppointmentsController);
+
   app.get("/start-bot", telegramBotController);
 
   app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
