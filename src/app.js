@@ -14,8 +14,9 @@ import initilizeRollbarLogger from "./services/rollbar";
 import mainController from "./controllers/main.controller";
 const PORT = process.env.PORT || 3000;
 
+const rollbar = initilizeRollbarLogger();
 
-const middleWares = [json, helmet, compression];
+const middleWares = [json, helmet, compression, rollbar.errorHandler];
 const initMiddleWares = (app) =>
   middleWares.map((middleWare) => app.use(middleWare()));
 
@@ -28,7 +29,6 @@ const startApp = () => {
   initDataBase();
 
   // rollbar logger for errors
-  initilizeRollbarLogger();
 
   // routes
   app.get("/", mainController);
@@ -44,6 +44,5 @@ const checkAppointmentEveryDayJob = createScheduledJobs({
   callBack: checkAppointmentServiceResult,
 });
 // checkAppointmentEveryDayJob.start();
-
 
 startApp();
