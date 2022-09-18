@@ -5,7 +5,8 @@ const checkAppointmentsController = async (req, res, next) => {
     const result = await AppointmentCheckerService();
     res.send(result);
   } catch (e) {
-    console.log(e);
+    next(e);
+    throw new Error(e);
   }
 };
 

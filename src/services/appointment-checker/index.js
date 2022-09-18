@@ -1,12 +1,26 @@
-import { goToLoginPage } from "../browser-DOM/interactions/goToLoginPage";
+import { goToLoginPage } from "../browser/browser-DOM/interactions/goToLoginPage";
 import browserApi from "../browser";
-import isErrorScreen, { getErrorText } from "../browser-DOM/errors/errorScreen";
-import fillLoginForm from "../browser-DOM/interactions/fillLoginForm";
-import { getAppointmentData } from "../browser-DOM/interactions/getAppointment";
-import { appointmentRequestInterceptor } from "../requestHandler";
-import { selectVFSLocation } from "../browser-DOM/interactions/selectLocation";
-import { resolveCaptcha } from "../browser-DOM/interactions/resolveCaptcha";
-import logout from "../browser-DOM/interactions/logout";
+import isErrorScreen, { getErrorText } from "../browser/browser-DOM/errors/errorScreen";
+import fillLoginForm from "../browser/browser-DOM/interactions/fillLoginForm";
+import { getAppointmentData } from "../browser/browser-DOM/interactions/getAppointment";
+import { appointmentRequestInterceptor } from "../browser/browser-request-interceptor/appointmentRequestInterceptor";
+import { selectVFSLocation } from "../browser/browser-DOM/interactions/selectLocation";
+import { resolveCaptcha } from "../browser/browser-DOM/interactions/resolveCaptcha";
+import logout from "../browser/browser-DOM/interactions/logout";
+
+const handleErrorPage = async (page) => {
+  // if login was not sucessfull
+  const isErrorElementVisible = await page.$(
+    "#ApplicantListForm > div.validation-summary-errors > ul > li"
+  );
+  if (isErrorElementVisible) {
+    const errorText = await isErrorElementVisible.evaluate(
+      (el) => el.textContent
+    ); // grab the textContent from the element, by evaluating this function in the browser context
+    // res.send(errorText)
+    throw new Error(errorText);
+  }
+};
 
 const AppointmentCheckerService = async () => {
   const browser = await browserApi.create();
@@ -32,17 +46,7 @@ const AppointmentCheckerService = async () => {
       page.waitForNavigation({ waitUntil: "networkidle2" }),
     ]);
 
-    // if login was not sucessfull
-    const isErrorElementVisible = await page.$(
-      "#ApplicantListForm > div.validation-summary-errors > ul > li"
-    );
-    if (isErrorElementVisible) {
-      const errorText = await isErrorElementVisible.evaluate(
-        (el) => el.textContent
-      ); // grab the textContent from the element, by evaluating this function in the browser context
-      // res.send(errorText)
-      throw new Error(errorText);
-    }
+    handleErrorPage();
 
     // select appointment on the menu
     await getAppointmentData(page);
@@ -53,7 +57,7 @@ const AppointmentCheckerService = async () => {
     await logout(page);
     return finalResult;
   } catch (e) {
-    await logout(page);
+    // await logout(page);
     throw new Error(e);
   }
 };
@@ -63,7 +67,7 @@ const checkAppointmentServiceResult = async () => {
     const result = await AppointmentCheckerService();
     sendMessageToAllUsers(result);
   } catch (e) {
-    console.log(e);
+    console.log("malek", e);
     throw new Error(e);
   }
 };
