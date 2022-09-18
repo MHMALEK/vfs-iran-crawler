@@ -7,6 +7,7 @@ import { appointmentRequestInterceptor } from "../browser/browser-request-interc
 import { selectVFSLocation } from "../browser/browser-DOM/interactions/selectLocation";
 import { resolveCaptcha } from "../browser/browser-DOM/interactions/resolveCaptcha";
 import logout from "../browser/browser-DOM/interactions/logout";
+import { sendMessageToAllUsers } from "../telegram-bot";
 
 const handleErrorPage = async (page) => {
   // if login was not sucessfull
