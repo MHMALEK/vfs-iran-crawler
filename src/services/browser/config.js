@@ -13,6 +13,6 @@ console.log(';randomUserAgent', randomUserAgent.data.userAgent)
 
 const puppeteerConfig = {
   headless: process.env.NODE_ENV === 'production' ? true : false,
-  args: [randomUserAgent.data.userAgent || userAgentDefault],
+  args: [randomUserAgent.data.userAgent || userAgentDefault, '--no-sandbox'],
 };
 export default puppeteerConfig;
