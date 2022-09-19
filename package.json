@@ -4,9 +4,9 @@
   "description": "check vfs appointments",
   "main": "node.js",
   "scripts": {
-    "dev": "NODE_ENV=development npm-run-all --parallel watch:build",
+    "dev": "NODE_ENV=production npm-run-all --parallel watch:build",
     "watch:build": "webpack --watch",
-    "start": "node build/index.js",
+    "start": "NODE_ENV=production node build/index.js",
     "build": "webpack"
   },
   "author": "MHMALEK",

@@ -7,17 +7,14 @@ const createTelegramBot = (token) => {
   return new TelegramBotAPI(token, { polling: true });
 };
 
-const getToken = () =>
-  process.env.NODE_ENV === "production"
-    ? process.env.TELEGRAM_BOT_TOKEN_PROD
-    : process.env.TELEGRAM_BOT_TOKEN;
+const getToken = () => process.env.TELEGRAM_BOT_TOKEN_PROD;
 
 const TelegramBot = createTelegramBot(getToken());
 
 const initTelegramBotListeners = async () => {
   if (TelegramBot.isPolling()) {
     await TelegramBot.stopPolling();
-    await TelegramBot.startPolling()
+    await TelegramBot.startPolling();
   }
   TelegramBot.on("message", onMessageRecived);
   TelegramBot.on("callback_query", onCallbackQuery);
@@ -83,7 +80,7 @@ const saveChatIDToDB = async (chatId) => {
 
 const sendMessageToAllUsers = async (message) => {
   const users = await getAllUsers();
-  console.log('users', users, message)
+  console.log("users", users, message);
   users.map(({ chatId }) => TelegramBot.sendMessage(chatId, message));
 };
 

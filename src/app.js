@@ -36,7 +36,8 @@ const startApp = () => {
 
   app.get("/start-bot", telegramBotController);
 
-  app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
+  // app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
+  return app
 };
 
 const checkAppointmentEveryDayJob = createScheduledJobs({
@@ -45,4 +46,4 @@ const checkAppointmentEveryDayJob = createScheduledJobs({
 });
 // checkAppointmentEveryDayJob.start();
 
-startApp();
+const app = startApp();
