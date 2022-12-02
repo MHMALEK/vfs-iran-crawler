@@ -3,14 +3,17 @@ const selectCaptchaImage = async (page) => {
   const path = "captcha.png";
   const encoding = "base64";
   const captchaScreenShotConfig = {
-    path,
     encoding,
   };
   await page.waitForSelector("#CaptchaImage");
   const captchImage = await page.$("#CaptchaImage");
+  console.log('77777', captchImage)
   const captchaImageBase64ScreenShot = await captchImage.screenshot(
     captchaScreenShotConfig
   );
+
+  console.log('88888', captchaImageBase64ScreenShot)
+
 
   return captchaImageBase64ScreenShot;
 };

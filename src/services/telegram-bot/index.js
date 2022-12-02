@@ -14,8 +14,9 @@ const TelegramBot = createTelegramBot(getToken());
 const initTelegramBotListeners = async () => {
   if (TelegramBot.isPolling()) {
     await TelegramBot.stopPolling();
-    await TelegramBot.startPolling();
   }
+  await TelegramBot.startPolling();
+
   TelegramBot.on("message", onMessageRecived);
   TelegramBot.on("callback_query", onCallbackQuery);
   TelegramBot.onText(/\/start/, showStartMenu);
@@ -88,7 +89,7 @@ const sendMessageToUser = ({ chatId, message }) => {
   TelegramBot.sendMessage(chatId, message);
 };
 
-initTelegramBotListeners();
+// initTelegramBotListeners();
 
 export { initTelegramBotListeners, sendMessageToAllUsers, sendMessageToUser };
 export default TelegramBot;

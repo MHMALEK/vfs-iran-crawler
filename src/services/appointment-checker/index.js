@@ -1,6 +1,8 @@
 import { goToLoginPage } from "../browser/browser-DOM/interactions/goToLoginPage";
 import browserApi from "../browser";
-import isErrorScreen, { getErrorText } from "../browser/browser-DOM/errors/errorScreen";
+import isErrorScreen, {
+  getErrorText,
+} from "../browser/browser-DOM/errors/errorScreen";
 import fillLoginForm from "../browser/browser-DOM/interactions/fillLoginForm";
 import { getAppointmentData } from "../browser/browser-DOM/interactions/getAppointment";
 import { appointmentRequestInterceptor } from "../browser/browser-request-interceptor/appointmentRequestInterceptor";
@@ -29,7 +31,9 @@ const AppointmentCheckerService = async () => {
 
   try {
     // go to login page
+    console.log('22222')
     await goToLoginPage(page);
+    console.log('33333')
 
     // show error if it couldn't show the login page
     const hasErrorOnStart = await isErrorScreen(page);
@@ -39,7 +43,10 @@ const AppointmentCheckerService = async () => {
     }
 
     // login flow
+    console.log('44444')
     const captcha = await resolveCaptcha(page);
+    console.log("55555", captcha);
+
     await fillLoginForm(page, captcha);
     // submit form and wait until login finish
     await Promise.all([
@@ -56,9 +63,10 @@ const AppointmentCheckerService = async () => {
     // handle appointment response for this center
     const finalResult = await appointmentRequestInterceptor(page);
     await logout(page);
-    return finalResult;
+    return 'finalResult';
   } catch (e) {
     // await logout(page);
+    console.log("eeeeee", e);
     throw new Error(e);
   }
 };
@@ -66,9 +74,8 @@ const AppointmentCheckerService = async () => {
 const checkAppointmentServiceResult = async () => {
   try {
     const result = await AppointmentCheckerService();
-    sendMessageToAllUsers(result);
+    // sendMessageToAllUsers(result);
   } catch (e) {
-    console.log("malek", e);
     throw new Error(e);
   }
 };

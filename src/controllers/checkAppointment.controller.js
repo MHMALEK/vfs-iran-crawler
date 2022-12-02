@@ -4,7 +4,7 @@ import { sendMessageToAllUsers } from "../services/telegram-bot";
 const checkAppointmentsController = async (req, res, next) => {
   try {
     const result = await AppointmentCheckerService();
-    sendMessageToAllUsers(result)
+    // sendMessageToAllUsers(result)
     res.send(result);
   } catch (e) {
     next(e);

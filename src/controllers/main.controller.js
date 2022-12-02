@@ -4,7 +4,7 @@ import { sendMessageToAllUsers } from "../services/telegram-bot";
 const mainController = async (req, res, next) => {
   try {
     res.send(
-      "this app is a simple robot to help you find and make appointment in VFS global in Iran!!"
+      "this app is a simple robot to help you find and make appointment in VFS global in Iran!!!"
     );
   } catch (e) {
     next(e);

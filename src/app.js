@@ -3,6 +3,7 @@ dotenv.config();
 const compression = require("compression");
 import express, { json } from "express";
 import helmet from "helmet";
+var cors = require('cors')
 import checkAppointmentsController from "./controllers/checkAppointment.controller";
 import telegramBotController from "./controllers/telegramBot.controller";
 import initDataBase from "./database";
@@ -16,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 
 const rollbar = initilizeRollbarLogger();
 
-const middleWares = [json, helmet, compression, rollbar.errorHandler];
+const middleWares = [json, helmet, compression, rollbar.errorHandler, cors];
 const initMiddleWares = (app) =>
   middleWares.map((middleWare) => app.use(middleWare()));
 
@@ -25,8 +26,9 @@ const startApp = () => {
 
   initMiddleWares(app);
 
+
   // start database
-  initDataBase();
+  // initDataBase();
 
   // rollbar logger for errors
 
@@ -34,16 +36,13 @@ const startApp = () => {
   app.get("/", mainController);
   app.get("/check-appointment", checkAppointmentsController);
 
-  app.get("/start-bot", telegramBotController);
-
-  // app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
-  return app
+  app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
+  return app;
 };
 
 const checkAppointmentEveryDayJob = createScheduledJobs({
   expression: cronJobDefaultConfig.expression,
   callBack: checkAppointmentServiceResult,
 });
-// checkAppointmentEveryDayJob.start();
 
 const app = startApp();
