@@ -5,7 +5,7 @@ import TelegramBot, {
 
 const telegramBotController = (req, res) => {
   // listen to messages request
-  initTelegramBotListeners();
+  // initTelegramBotListeners();
 };
 
 export default telegramBotController;

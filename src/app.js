@@ -3,10 +3,8 @@ dotenv.config();
 const compression = require("compression");
 import express, { json } from "express";
 import helmet from "helmet";
-var cors = require('cors')
+var cors = require("cors");
 import checkAppointmentsController from "./controllers/checkAppointment.controller";
-import telegramBotController from "./controllers/telegramBot.controller";
-import initDataBase from "./database";
 import { checkAppointmentServiceResult } from "./services/appointment-checker";
 import createScheduledJobs, {
   cronJobDefaultConfig,
@@ -25,10 +23,6 @@ const startApp = () => {
   const app = express();
 
   initMiddleWares(app);
-
-
-  // start database
-  // initDataBase();
 
   // rollbar logger for errors
 

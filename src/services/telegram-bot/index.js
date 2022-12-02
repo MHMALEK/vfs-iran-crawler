@@ -7,9 +7,9 @@ const createTelegramBot = (token) => {
   return new TelegramBotAPI(token, { polling: true });
 };
 
-const getToken = () => process.env.TELEGRAM_BOT_TOKEN_PROD;
+// const getToken = () => process.env.TELEGRAM_BOT_TOKEN_PROD;
 
-const TelegramBot = createTelegramBot(getToken());
+// const TelegramBot = createTelegramBot(getToken());
 
 const initTelegramBotListeners = async () => {
   if (TelegramBot.isPolling()) {
