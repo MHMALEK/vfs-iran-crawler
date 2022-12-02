@@ -1,5 +1,4 @@
 import AppointmentCheckerService from "../services/appointment-checker";
-import { sendMessageToAllUsers } from "../services/telegram-bot";
 
 const checkAppointmentsController = async (req, res, next) => {
   try {
