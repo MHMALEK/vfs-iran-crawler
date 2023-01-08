@@ -12,7 +12,7 @@ console.log(process.env.NODE_ENV, "process.env.NODE_ENV");
 console.log(";randomUserAgent", randomUserAgent.data.userAgent);
 
 const puppeteerConfig = {
-  headless: process.env.NODE_ENV === "production" ? false : true,
+  headless: process.env.NODE_ENV != "production" ? false : true,
   args: [
     randomUserAgent.data.userAgent,
     "--no-sandbox",

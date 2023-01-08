@@ -9,8 +9,8 @@ puppeteer.use(StealthPlugin());
 
 const create = async ({ headless, args } = puppeteerConfig) => {
   const browser = await puppeteer.launch({
-    headless: false,
-    // args,
+    headless,
+    args,
   });
   return browser;
 };
