@@ -1,4 +1,4 @@
-export const appointmentRequestInterceptor = (
+export const isAppointmentAvailableByRequestInterceptor = (
   page,
   slotEndPointUrl = "Account/CheckSeatAllotment"
 ) =>
@@ -9,10 +9,11 @@ export const appointmentRequestInterceptor = (
         if (originalRequest.url().includes(slotEndPointUrl)) {
           const responseFromEndpoint = await response.json();
           if (JSON.stringify(responseFromEndpoint).includes("no seat")) {
-            return resolve(responseFromEndpoint);
+            // appointmetn is not available
+            return resolve(false);
           } else {
-            console.log("responseFromEndpoint", responseFromEndpoint);
-            return resolve("Appointment is Availble! Get it soon!");
+            // appointmetn is available
+            return resolve(true);
           }
         }
       });

@@ -1,6 +1,6 @@
 import { selectScheduleMenuItem } from "../selectors";
 
-export const getAppointmentData = async (page) => {
+export const selectFamilyVisitInSelectBox = async (page) => {
   try {
     const scheduleMenuItem = await selectScheduleMenuItem(page);
     return await Promise.all([

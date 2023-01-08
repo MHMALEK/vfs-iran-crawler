@@ -29,6 +29,9 @@ const selectScheduleMenuItem = async (page) => {
 };
 const selectLocationIdDropdown = () => "select[name='LocationId']";
 
+const selectVisaCategoryDropwdown = () => "select[name='VisaCategoryId']";
+
+
 const selectLogOutButton = (page) => "#logoutForm  > a > span";
 
-export { selectCaptchaImage, selectScheduleMenuItem, selectLocationIdDropdown, selectLogOutButton };
+export { selectCaptchaImage, selectScheduleMenuItem, selectLocationIdDropdown, selectLogOutButton, selectVisaCategoryDropwdown };
