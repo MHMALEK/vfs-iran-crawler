@@ -8,11 +8,15 @@ const randomUserAgent = new UserAgent({
   platform: "Linux x86_64",
 });
 
-console.log(process.env.NODE_ENV,'process.env.NODE_ENV')
-console.log(';randomUserAgent', randomUserAgent.data.userAgent)
+console.log(process.env.NODE_ENV, "process.env.NODE_ENV");
+console.log(";randomUserAgent", randomUserAgent.data.userAgent);
 
 const puppeteerConfig = {
-  headless: true,
-  args: [randomUserAgent.data.userAgent, '--no-sandbox', '--disable-setuid-sandbox'],
+  headless: process.env.NODE_ENV === "production" ? false : true,
+  args: [
+    randomUserAgent.data.userAgent,
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+  ],
 };
 export default puppeteerConfig;
