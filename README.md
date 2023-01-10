@@ -68,4 +68,4 @@ npm run build
 # support
 I'm not working on this repo anymore but if you have questions or something, I will be happy to help, contact me via: mhos.malek@gmail.com and I will try to help as much as I can.
 
-Hope it's still OK and can be usefuly for anybody who want to use it:)
+Hope it's still OK and can be helpful to anybody who need to use it:)
