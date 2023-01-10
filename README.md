@@ -46,7 +46,7 @@ npm run build
 ```
 
 
-# Libraries and frameworks:
+## Libraries and frameworks:
 
  
 1 - ExpressJS (just to create sample endpoint)
@@ -54,14 +54,6 @@ npm run build
 2 - Puppeteer - Headless browser to crawl the website
 
 
-
-
-# Test endpoint
-
-You can build and start the project with commands above. but for testing, I also have created a sample endpoint which I used to get soonest available appointment:
-
- 
-https://vfs-crawler.indapplication.nl/check-appointment
 
   
 
