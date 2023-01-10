@@ -23,14 +23,8 @@ CAPTCHA_SERVER_API_TOKEN=0e819916b2290052cd066c68014a4282
 VFS_BASE_URL=https://row7.vfsglobal.com/Global-Appointment/Account/RegisteredLogin?q=shSA0YnE4pLF9Xzwon/x/MI24mBrB3J1rBC1vdDKa5IQdrJXKYTs+DdVJBpH9l4l7y9kr9wkS1P1QdJpp0GPog==
 
 # create a vfs account and add to here
-VFS_USER_NAME=
-VFS_PASSWORD=
-
-
-# no database was needed for sample app, but if you need to save data somewhere, you can use this env variables.
-MANGO_DB_PASSWORD=
-MANGO_DB_USER_NAME=
-MANGO_DATABASE_URL=
+VFS_USER_NAME
+VFS_PASSWORD
 
 # your desired port to run sample app
 PORT=3003
