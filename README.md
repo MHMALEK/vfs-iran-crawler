@@ -69,24 +69,6 @@ You can build and start the project with commands above. but for testing, I also
  
 https://vfs-crawler.indapplication.nl/check-appointment
 
-# Project Structure
-
-
-```
-
-
-├── dist # Compiled files (alternative of `build` in other frameworks)
-
-├── src # Source files
-├──── controllers #
-├──── services # 
-├──── database # 
-├──── errors # 
-├──── models # 
-
-
-```
-
   
 
 ## TODO:
