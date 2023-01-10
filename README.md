@@ -13,11 +13,11 @@ npm install
 
 then you need to add an .env file 
 
-You can use my captch api token for test. please do not over use it or use it for other purposes. it's only for test apps.
+You can use my captch api token for test (email me and I will give you token and Please *do not* use it for other purposes.).
 
 ```
-CAPTCHA_SERVER_BASE_API=https://api.anycaptcha.com
-CAPTCHA_SERVER_API_TOKEN=0e819916b2290052cd066c68014a4282
+CAPTCHA_SERVER_BASE_API=
+CAPTCHA_SERVER_API_TOKEN=
 
 # change this to proper vfs system you want. I used Iran netherlands by default as I need it for invite people from Iran at first
 VFS_BASE_URL=https://row7.vfsglobal.com/Global-Appointment/Account/RegisteredLogin?q=shSA0YnE4pLF9Xzwon/x/MI24mBrB3J1rBC1vdDKa5IQdrJXKYTs+DdVJBpH9l4l7y9kr9wkS1P1QdJpp0GPog==
