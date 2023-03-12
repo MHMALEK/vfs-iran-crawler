@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+const http = require("http");
 dotenv.config();
 const compression = require("compression");
 import express, { json } from "express";
@@ -40,3 +41,21 @@ const checkAppointmentEveryDayJob = createScheduledJobs({
 });
 
 const app = startApp();
+
+const createSocketIOServer = () => {
+  const server = http.createServer(app);
+  const { Server } = require("socket.io");
+  const io = new Server(server);
+  return io;
+};
+
+const socketServer = createSocketIOServer();
+
+socketServer.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+
+export { socketServer };
