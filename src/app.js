@@ -4,14 +4,17 @@ const compression = require("compression");
 import express, { json } from "express";
 import helmet from "helmet";
 var cors = require("cors");
-import checkAppointmentsController from "./controllers/checkAppointment.controller";
-import { checkAppointmentServiceResult } from "./services/appointment-checker";
-import createScheduledJobs, {
-  cronJobDefaultConfig,
-} from "./services/scheduldedFunctions";
+import checkAppointmentsController, {
+  showSoonestAppointmentFromDBController,
+} from "./controllers/checkAppointment.controller";
+
 import initilizeRollbarLogger from "./services/rollbar";
+import { Server } from "socket.io";
+import initDataBase from "./database";
+import getAndSaveAppointmentCronjobService from "./services/get-soonest-appointment-cronjob";
 import mainController from "./controllers/main.controller";
-const PORT = process.env.PORT || 3000;
+import startTelegramBotAndSaveUsersOnStartCommand from "./services/telegram-bot/init";
+const PORT = process.env.PORT || 3002;
 
 const rollbar = initilizeRollbarLogger();
 
@@ -29,14 +32,35 @@ const startApp = () => {
   // routes
   app.get("/", mainController);
   app.get("/check-appointment", checkAppointmentsController);
+  app.get("/show-soonest", showSoonestAppointmentFromDBController);
 
-  app.listen(PORT, () => console.log(`App listening at port ${PORT}`));
-  return app;
+  const server = app.listen(PORT, () =>
+    console.log(`App listening at port ${PORT}`)
+  );
+  return { app, server };
 };
 
-const checkAppointmentEveryDayJob = createScheduledJobs({
-  expression: cronJobDefaultConfig.expression,
-  callBack: checkAppointmentServiceResult,
+initDataBase();
+
+getAndSaveAppointmentCronjobService();
+
+// init telegram bot
+
+startTelegramBotAndSaveUsersOnStartCommand();
+
+const { app, server } = startApp();
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
 });
 
-const app = startApp();
+io.on("connection", (socket) => {
+  console.log(`⚡: ${socket.id} user just connected!`);
+  socket.on("disconnect", () => {
+    console.log("🔥: A user disconnected");
+  });
+});
+
+export { app, server, io };

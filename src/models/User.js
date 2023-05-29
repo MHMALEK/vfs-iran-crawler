@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const telegramUserSchema = new mongoose.Schema({
   chatId: {
     type: Number,
     unique: true,
   },
 });
 
-const userModel = mongoose.model("user", userSchema);
+const telegramUserModel = mongoose.model("telegram", telegramUserSchema);
 
-const getAllUsers = async () => await userModel.find();
+const findAllTelegramUsers = async () => await telegramUserModel.find();
 
-const findUserByChatId = async (chatId) => await userModel.findOne({ chatId });
+const findAllTelegramUserByChatId = async (chatId) => await telegramUserModel.findOne({ chatId });
 
-const isUserExist = async (chatId) => {
+const isTelegramUserExist = async (chatId) => {
   const isUserSavedBefore = await findUserByChatId(chatId);
   if (isUserSavedBefore) {
     return true;
@@ -21,5 +21,15 @@ const isUserExist = async (chatId) => {
   return false;
 };
 
-export { getAllUsers, findUserByChatId, isUserExist };
-export default userModel;
+const addUserForTelegramBot = async (chatId) => {
+  const user = new telegramUserModel({
+    chatId,
+  });
+  return await user.save(function (err) {
+    if (err) console.log(err);
+    console.log("Inserted document into the collection");
+  });
+};
+
+export { findAllTelegramUsers, findAllTelegramUserByChatId, isTelegramUserExist, addUserForTelegramBot };
+export default telegramUserModel;

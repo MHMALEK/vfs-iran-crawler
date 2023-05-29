@@ -10,6 +10,9 @@ import { selectVFSLocation } from "../browser/browser-DOM/interactions/selectLoc
 import { resolveCaptcha } from "../browser/browser-DOM/interactions/resolveCaptcha";
 import logout from "../browser/browser-DOM/interactions/logout";
 import { selectCategory } from "../browser/browser-DOM/interactions/selectVisaCategory";
+import { io } from "../../app";
+import UserAgent from "user-agents";
+import cerateAndSetRandomUserAgent from "../browser/useragent";
 
 const handleErrorPage = async (page) => {
   // if login was not sucessfull
@@ -22,6 +25,8 @@ const handleErrorPage = async (page) => {
     ); // grab the textContent from the element, by evaluating this function in the browser context
     // res.send(errorText)
     steps.LOGIN_ACTION.succesfull = false;
+    io.emit("newUpdate", steps);
+    io.emit("errorHappend", e);
     throw new Error(errorText);
   }
 };
@@ -35,11 +40,9 @@ const getAppointmentData = async (page) => {
       }
     )
     .then(async (res) => {
-      console.log('asdsadsad', res)
+      console.log("asdsadsad", res);
       if (res !== null) {
-        const appointmetntTimeText = await res.evaluate(
-          (el) => el.innerHTML
-        );
+        const appointmetntTimeText = await res.evaluate((el) => el.innerHTML);
         console.log("appointmetntTimeText", appointmetntTimeText);
         return appointmetntTimeText;
       }
@@ -50,39 +53,85 @@ const getAppointmentData = async (page) => {
 const steps = {
   GO_TO_LOGIN_PAGE: {
     id: 0,
-    label: "Go to login page",
+    label: "در حال ورود به وبسایت ",
+    desc: "ما در حال باز کردن سایت VFS گلوبال هستیم... لطفا مرورگر رو نبنید و منتظر اتمام فرآیند باشید.",
     succesfull: false,
   },
   GET_CAPTCHA: {
     id: 1,
-    label: "Get Captcha Image",
+    label: "در حال ذخیره سازی تصویر کپچا",
+    desc: "ما داریم تصویر کپچا رو استخراج میکنیم تا بتونیم اونو حل کنیم و فرآیند ورود رو انجام بدیم.",
+
     succesfull: false,
   },
   RESOLVE_CAPTCHA: {
     id: 2,
-    label: "Resolve Captch Image by Third Party App",
+    label: "حل کپچا",
+    desc: "تصویر کپچا در حال حل شدن است...",
+
     succesfull: false,
   },
   ENTER_LOGIN_DETAILS: {
     id: 3,
-    label: "Enter Login details",
+    label: "وارد کردن اطلاعات ورود",
+    desc: "ما در حال وارد کردن اطلاعات ورود و ورود به ناحیه کاربری در وبسایت ٰVFS هستیم.",
+
     succesfull: false,
   },
   LOGIN_ACTION: {
     id: 4,
-    label: "Login to VFS successfully",
+    label: "ورود به وبسایت VFS با موفقیت انجام شد!",
+    desc: "ما حالا میتونیم اطلاعات قرار ملاقات رو از وبسایت پیدا کنیم.",
+
+    succesfull: false,
+  },
+  SELECT_SERVICE: {
+    id: 5,
+    label: "انتخاب سرویس ثبت قرار ملاقات",
+    desc: "ما سرویس ثبت قرار ملاقات رو انتخاب میکنیم.",
+
     succesfull: false,
   },
   SELECT_LOCATION: {
-    id: 5,
-    label: "Select location",
+    id: 6,
+    label: "انتخاب محل",
+    desc: "ما دفتر تهران رو برای این قرار انتخاب میکنیم.",
+
+    succesfull: false,
+  },
+  SELECT_APPOINTMENT_TYPE: {
+    id: 7,
+    label: "انتخاب سرویس",
+    desc: "ما سرویس ملاقات خانواده و دوستان رو انتخاب میکنیم.",
+
+    succesfull: false,
+  },
+  GET_SOONEST_DATA: {
+    id: 8,
+    label: "در حال ارسال درخواست قرار ملاقات",
+    desc: "ما اطلاعات قرار ملاقات رو دریافت می‌کنیم",
+    succesfull: false,
+  },
+  LOGOUT_ACTION: {
+    id: 9,
+    label: "خروج از سیستم",
     succesfull: false,
   },
 };
 
 const AppointmentCheckerService = async () => {
   const browser = await browserApi.create();
+
   const page = await browser.newPage();
+
+  // set cache to false
+  await page.setCacheEnabled(false);
+
+  await cerateAndSetRandomUserAgent(page);
+
+  page.setDefaultNavigationTimeout(180000);
+
+  let captcha;
 
   try {
     // go to login page
@@ -93,75 +142,124 @@ const AppointmentCheckerService = async () => {
     if (hasErrorOnStart) {
       const errorText = getErrorText();
       steps.GO_TO_LOGIN_PAGE.succesfull = false;
+      steps.ENTER_LOGIN_DETAILS.succesfull = false;
+      io.emit("errorHappend", e);
+      io.emit("newUpdate", steps);
       throw new Error(errorText);
     }
 
     steps.GO_TO_LOGIN_PAGE.succesfull = true;
+    io.emit("newUpdate", steps);
 
     // login flow
-    console.log("44444");
-    const captcha = await resolveCaptcha(page);
 
-    steps.GET_CAPTCHA.succesfull = true;
+    try {
+      captcha = await resolveCaptcha(page);
+      steps.RESOLVE_CAPTCHA.succesfull = true;
+      steps.GET_CAPTCHA.succesfull = true;
+      io.emit("newUpdate", steps);
+    } catch (e) {
+      console.log("asdasdasdasdads", e);
+      steps.GET_CAPTCHA.succesfull = false;
+      steps.RESOLVE_CAPTCHA.succesfull = false;
+      io.emit("newUpdate", steps);
+      io.emit("errorHappend", e);
+    }
 
-    await fillLoginForm(page, captcha);
+    try {
+      await fillLoginForm(page, captcha);
+      steps.ENTER_LOGIN_DETAILS = true;
+      io.emit("newUpdate", steps);
+    } catch (e) {
+      steps.ENTER_LOGIN_DETAILS = false;
+      io.emit("newUpdate", steps);
+      io.emit("errorHappend", e);
+    }
 
-    // submit form and wait until login finish
-    await Promise.all([
-      page.click("#btnSubmit"),
-      page.waitForNavigation({ waitUntil: "networkidle2" }),
-    ]);
+    try {
+      // submit form and wait until login finish
+      await Promise.all([
+        page.click("#btnSubmit"),
+        page.waitForNavigation({ waitUntil: "networkidle2" }),
+      ]);
 
-    steps.RESOLVE_CAPTCHA.succesfull = true;
+      steps.LOGIN_ACTION.succesfull = true;
+      io.emit("newUpdate", steps);
+    } catch (e) {
+      steps.LOGIN_ACTION.succesfull = false;
+      io.emit("newUpdate", steps);
+      io.emit("errorHappend", e);
+    }
 
     handleErrorPage();
 
-    steps.LOGIN_ACTION.succesfull = true;
+    try {
+      await selectFamilyVisitInSelectBox(page);
+      steps.SELECT_SERVICE.succesfull = true;
+      io.emit("newUpdate", steps);
+    } catch (e) {
+      steps.SELECT_SERVICE.succesfull = false;
+      io.emit("newUpdate", steps);
+      io.emit("errorHappend", e);
+    }
 
-    await selectFamilyVisitInSelectBox(page);
+    try {
+      // select visa center on list
+      await selectVFSLocation(page);
+      steps.SELECT_LOCATION.succesfull = true;
+      io.emit("newUpdate", steps);
+    } catch (e) {
+      steps.SELECT_LOCATION.succesfull = false;
+      io.emit("newUpdate", steps);
+      io.emit("errorHappend", e);
+    }
 
-    // select visa center on list
-    await selectVFSLocation(page);
-
-    steps.SELECT_LOCATION.succesfull = true;
-
-
-    // select visa category
-    await selectCategory(page)
-
-    // handle appointment response for this center
-    const isAppointmentAvailable =
-      await isAppointmentAvailableByRequestInterceptor(page);
+    try {
+      // select visa category
+      await selectCategory(page);
+      steps.SELECT_APPOINTMENT_TYPE.succesfull = true;
+      io.emit("newUpdate", steps);
+    } catch (e) {
+      steps.SELECT_APPOINTMENT_TYPE.succesfull = false;
+      io.emit("newUpdate", steps);
+      io.emit("errorHappend", e);
+    }
 
     let time;
-    if (isAppointmentAvailable) {
-      console.log('1111')
-      // select appointment on the menu
-      time = await getAppointmentData(page);
-      console.log("time", time);
+
+    try {
+      // handle appointment response for this center
+      const isAppointmentAvailable =
+        await isAppointmentAvailableByRequestInterceptor(page);
+
+      if (isAppointmentAvailable) {
+        // select appointment on the menu
+        time = await getAppointmentData(page);
+        console.log("time", time);
+        steps.GET_SOONEST_DATA.succesfull = true;
+        io.emit("newUpdate", steps);
+      }
+    } catch (e) {
+      steps.GET_SOONEST_DATA.succesfull = false;
+      io.emit("newUpdate", steps);
     }
 
     await logout(page);
+    steps.LOGOUT_ACTION.succesfull = true;
+    io.emit("newUpdate", steps);
     await browser.close();
-    return `Soonest available appointment for VFS is ${time}`
+    return time;
   } catch (e) {
     await logout(page);
+    steps.LOGOUT_ACTION.succesfull = true;
+    io.emit("newUpdate", steps);
+    io.emit("errorHappend", e);
+
     await browser.close();
     console.log("eeeeee", e);
 
     throw new Error(e);
   }
 };
-
-const checkAppointmentServiceResult = async () => {
-  try {
-    const result = await AppointmentCheckerService();
-    // sendMessageToAllUsers(result);
-  } catch (e) {
-    throw new Error(e);
-  }
-};
-
-export { checkAppointmentServiceResult };
 
 export default AppointmentCheckerService;

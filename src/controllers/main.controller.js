@@ -1,4 +1,3 @@
-import AppointmentCheckerService from "../services/appointment-checker";
 
 const mainController = async (req, res, next) => {
   try {

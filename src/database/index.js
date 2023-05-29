@@ -3,7 +3,10 @@ const mongoose = require("mongoose");
 const initDataBase = () => {
   try {
     const mongoString = process.env.MANGO_DATABASE_URL;
-    mongoose.connect(mongoString);
+    console.log("mongoString", mongoString);
+    mongoose.connect(mongoString, {
+      dbName: "vfs-appointments",
+    });
     const database = mongoose.connection;
 
     database.on("error", (error) => {
