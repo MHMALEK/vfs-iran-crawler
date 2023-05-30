@@ -143,9 +143,13 @@ const AppointmentCheckerService = async () => {
     // go to login page
     await goToLoginPage(page);
 
+    console.log('goToLoginPage')
+
     // show error if it couldn't show the login page
     const hasErrorOnStart = await isErrorScreen(page);
     if (hasErrorOnStart) {
+      console.log('hasErrorOnStart')
+
       const errorText = getErrorText();
       steps.GO_TO_LOGIN_PAGE.succesfull = false;
       steps.ENTER_LOGIN_DETAILS.succesfull = false;
@@ -155,7 +159,7 @@ const AppointmentCheckerService = async () => {
     }
 
     steps.GO_TO_LOGIN_PAGE.succesfull = true;
-    io.emit("newUpdate", steps);
+    // io.emit("newUpdate", steps);
 
     // login flow
 
@@ -163,23 +167,25 @@ const AppointmentCheckerService = async () => {
       captcha = await resolveCaptcha(page);
       steps.RESOLVE_CAPTCHA.succesfull = true;
       steps.GET_CAPTCHA.succesfull = true;
-      io.emit("newUpdate", steps);
+      console.log('captcha', captcha)
+
+      // io.emit("newUpdate", steps);
     } catch (e) {
       console.log("asdasdasdasdads", e);
       steps.GET_CAPTCHA.succesfull = false;
       steps.RESOLVE_CAPTCHA.succesfull = false;
-      io.emit("newUpdate", steps);
-      io.emit("errorHappend", e);
+      // io.emit("newUpdate", steps);
+      // io.emit("errorHappend", e);
     }
 
     try {
       await fillLoginForm(page, captcha);
       steps.ENTER_LOGIN_DETAILS = true;
-      io.emit("newUpdate", steps);
+      // io.emit("newUpdate", steps);
     } catch (e) {
       steps.ENTER_LOGIN_DETAILS = false;
-      io.emit("newUpdate", steps);
-      io.emit("errorHappend", e);
+      // io.emit("newUpdate", steps);
+      // io.emit("errorHappend", e);
     }
 
     try {
@@ -190,11 +196,11 @@ const AppointmentCheckerService = async () => {
       ]);
 
       steps.LOGIN_ACTION.succesfull = true;
-      io.emit("newUpdate", steps);
+      // io.emit("newUpdate", steps);
     } catch (e) {
       steps.LOGIN_ACTION.succesfull = false;
-      io.emit("newUpdate", steps);
-      io.emit("errorHappend", e);
+      // io.emit("newUpdate", steps);
+      // io.emit("errorHappend", e);
     }
 
     handleErrorPage();
@@ -202,11 +208,11 @@ const AppointmentCheckerService = async () => {
     try {
       await selectFamilyVisitInSelectBox(page);
       steps.SELECT_SERVICE.succesfull = true;
-      io.emit("newUpdate", steps);
+      // io.emit("newUpdate", steps);
     } catch (e) {
       steps.SELECT_SERVICE.succesfull = false;
-      io.emit("newUpdate", steps);
-      io.emit("errorHappend", e);
+      // io.emit("newUpdate", steps);
+      // io.emit("errorHappend", e);
     }
 
     try {
