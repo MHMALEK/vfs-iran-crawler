@@ -7,9 +7,8 @@ const fillLoginForm = async (page, captchResolved) => {
   }
 
   let user;
-  const users = await axios.get("http://localhost:3000/users/verified");
+  const users = await axios.get(process.env.VFS_REGISTERATION_BOT);
 
-  console.log("ssdasdasdasdsadsad", users);
   if (users.data.length > 0) {
     console.log("asdsadsadasdasdsad");
     user = getRandomItem(users.data).data.username;
