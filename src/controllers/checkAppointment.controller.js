@@ -2,6 +2,7 @@ import { getSoonestTime } from "../models/Times";
 import AppointmentCheckerService from "../services/appointment-checker";
 
 const checkAppointmentsController = async (req, res, next) => {
+  console.log('checkAppointmentsController')
   try {
     const soonestTime = await AppointmentCheckerService();
     res.json({ soonestTime });

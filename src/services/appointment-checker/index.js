@@ -122,7 +122,10 @@ const steps = {
 const AppointmentCheckerService = async () => {
   const browser = await browserApi.create();
 
+  console.log('sadsa', browser)
   const page = await browser.newPage();
+
+  console.log('page', browser)
 
   // set cache to false
   await page.setCacheEnabled(false);
@@ -132,6 +135,9 @@ const AppointmentCheckerService = async () => {
   page.setDefaultNavigationTimeout(180000);
 
   let captcha;
+
+  console.log('page', browser)
+
 
   try {
     // go to login page
