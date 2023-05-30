@@ -19,13 +19,13 @@ const create = async ({
   let browser;
   if (useProxy) {
     browser = await handleProxyForPuppeteer({
-      headless,
+      headless: true,
       args,
     });
   } else {
     browser = await puppeteer.launch({
-      headless,
-      args: [...args],
+      headless: true,
+      args,
     });
   }
   return browser;
